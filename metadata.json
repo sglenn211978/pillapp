@@ -1,7 +1,8 @@
 {
   "name": "PillPulse",
-  "applicationId": "com.aistudio.pillpulse.mderst",
-  "versionCode": 16,
-  "versionName": "16.0",
-  "description": "Lock-screen-ready medication reminder app that enforces adherence through persistent full-screen alarms, looping audio alerts, slide-to-confirm dosage verification, and comprehensive daily compliance dashboard."
+  "description": "Lock-screen-ready medication reminder app that enforces adherence through persistent full-screen alarms, looping audio alerts, slide-to-confirm dosage verification, and comprehensive daily compliance dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

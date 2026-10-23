@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "PillEase"
+rootProject.name = "PillPulse"
 include(":app")
