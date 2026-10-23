@@ -10,13 +10,14 @@ import androidx.compose.ui.graphics.Color
 @Composable
 fun DosePulseTheme(
     themeState: AppThemeState = AppThemeState(),
-    content: @Composable () -> Unit
-) {
-    val isDark = when (themeState.mode) {
+    darkTheme: Boolean = when (themeState.mode) {
         ThemeMode.LIGHT -> false
         ThemeMode.DARK -> true
         ThemeMode.SYSTEM -> isSystemInDarkTheme()
-    }
+    },
+    content: @Composable () -> Unit
+) {
+    val isDark = darkTheme
 
     val primary = themeState.preset.primaryColor
 
