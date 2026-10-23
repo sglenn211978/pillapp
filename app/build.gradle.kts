@@ -6,15 +6,15 @@ plugins {
 }
 
 android {
-    namespace = "com.example"
+    namespace = "com.sglenn.dosepulse"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.aistudio.pillpulse.mderst"
+        applicationId = "com.sglenn.dosepulse"
         minSdk = 26
         targetSdk = 35
-        versionCode = 16
-        versionName = "16.0"
+        versionCode = 1
+        versionName = "0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -74,4 +74,9 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
 
     debugImplementation(libs.androidx.ui.tooling)
+
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.androidx.sqlite.framework)
 }

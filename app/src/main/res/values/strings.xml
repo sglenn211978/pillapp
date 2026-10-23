@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">PillPulse</string>
-    <string name="channel_medication_name">Medication Alarms</string>
+    <string name="app_name">DosePulse</string>
+    <string name="channel_medication_name">DosePulse Medication Alarms</string>
     <string name="channel_medication_desc">Critical full-screen alerts and alarms when medications are due</string>
     <string name="action_take">Slide to Confirm Taken</string>
     <string name="action_snooze_10">Snooze 10m</string>

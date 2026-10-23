@@ -1,5 +1,8 @@
 {
-  "name": "PillPulse",
+  "name": "DosePulse",
+  "applicationId": "com.sglenn.dosepulse",
+  "versionCode": 1,
+  "versionName": "0.1",
   "description": "Lock-screen-ready medication reminder app that enforces adherence through persistent full-screen alarms, looping audio alerts, slide-to-confirm dosage verification, and comprehensive daily compliance dashboard.",
   "requestFramePermissions": [],
   "majorCapabilities": [
