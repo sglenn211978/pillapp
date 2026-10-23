@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -23,10 +24,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.Medication
-import com.example.data.MedicationReference
 import com.example.data.ScheduleType
 import com.example.ui.theme.*
 import com.example.ui.viewmodel.DashboardViewModel
+import com.example.util.TimeFormatHelper
 import kotlinx.coroutines.flow.first
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,6 +40,7 @@ fun AddEditMedicationScreen(
 ) {
     val context = LocalContext.current
     val allReferences by viewModel.allReferences.collectAsState(initial = emptyList())
+    val themeState by ThemeManager.themeState.collectAsState()
 
     var name by remember { mutableStateOf("") }
     var dosage by remember { mutableStateOf("") }
@@ -101,12 +103,12 @@ fun AddEditMedicationScreen(
                         }
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = SoftMistSlate)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
             )
         },
         bottomBar = {
             Surface(
-                color = SurfaceWhite,
+                color = MaterialTheme.colorScheme.surface,
                 shadowElevation = 8.dp,
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -136,7 +138,7 @@ fun AddEditMedicationScreen(
                             onNavigateBack()
                         }
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = MedicalTeal),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     shape = RoundedCornerShape(14.dp),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -147,7 +149,7 @@ fun AddEditMedicationScreen(
                 }
             }
         },
-        containerColor = SoftMistSlate
+        containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Column(
             modifier = modifier
@@ -160,11 +162,11 @@ fun AddEditMedicationScreen(
             // MEDICATION DETAILS & AUTOCOMPLETE
             Card(
                 shape = RoundedCornerShape(18.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceWhite),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Medication Information", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = TextPrimaryLight)
+                    Text("Medication Information", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = MaterialTheme.colorScheme.onSurface)
 
                     OutlinedTextField(
                         value = name,
@@ -181,7 +183,7 @@ fun AddEditMedicationScreen(
                         suggestedRefs.forEach { ref ->
                             Surface(
                                 shape = RoundedCornerShape(10.dp),
-                                color = CyanContainer,
+                                color = MaterialTheme.colorScheme.primaryContainer,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable {
@@ -196,13 +198,13 @@ fun AddEditMedicationScreen(
                                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Icon(Icons.Default.AutoAwesome, contentDescription = null, tint = MedicalTeal, modifier = Modifier.size(16.dp))
+                                    Icon(Icons.Default.AutoAwesome, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
                                     Spacer(modifier = Modifier.width(6.dp))
                                     Text(
                                         text = "${ref.name} (${ref.category})",
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.SemiBold,
-                                        color = MedicalTealDark
+                                        color = MaterialTheme.colorScheme.onPrimaryContainer
                                     )
                                 }
                             }
@@ -232,11 +234,11 @@ fun AddEditMedicationScreen(
             // COLOR PALETTE
             Card(
                 shape = RoundedCornerShape(18.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceWhite),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Text("Badge Color", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = TextPrimaryLight)
+                    Text("Badge Color", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = MaterialTheme.colorScheme.onSurface)
                     Spacer(modifier = Modifier.height(10.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -251,7 +253,7 @@ fun AddEditMedicationScreen(
                                     .clip(CircleShape)
                                     .background(color)
                                     .then(
-                                        if (isSelected) Modifier.border(3.dp, TextPrimaryLight, CircleShape)
+                                        if (isSelected) Modifier.border(3.dp, MaterialTheme.colorScheme.onSurface, CircleShape)
                                         else Modifier
                                     )
                                     .clickable { selectedColor = hex }
@@ -264,14 +266,14 @@ fun AddEditMedicationScreen(
             // RINGTONE & ALARM CUSTOMIZATION
             Card(
                 shape = RoundedCornerShape(18.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceWhite),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.MusicNote, contentDescription = null, tint = MedicalTeal)
+                        Icon(Icons.Default.MusicNote, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Alarm Ringtone & Audio", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = TextPrimaryLight)
+                        Text("Alarm Ringtone & Audio", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = MaterialTheme.colorScheme.onSurface)
                     }
 
                     val tones = listOf("Default System Alarm", "Gentle Chime", "Clinical Beep", "Urgent Siren")
@@ -281,7 +283,7 @@ fun AddEditMedicationScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(10.dp))
-                                .background(if (selectedRingtoneName == tone) CyanContainer else Color(0xFFF8FAFC))
+                                .background(if (selectedRingtoneName == tone) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.background)
                                 .clickable { selectedRingtoneName = tone }
                                 .padding(horizontal = 12.dp, vertical = 8.dp)
                         ) {
@@ -296,11 +298,11 @@ fun AddEditMedicationScreen(
             // INVENTORY & REFILL TRACKING
             Card(
                 shape = RoundedCornerShape(18.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceWhite),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("Pill Inventory & Low-Stock Alerts", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = TextPrimaryLight)
+                    Text("Pill Inventory & Low-Stock Alerts", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = MaterialTheme.colorScheme.onSurface)
 
                     OutlinedTextField(
                         value = remainingPills,
@@ -314,63 +316,164 @@ fun AddEditMedicationScreen(
                 }
             }
 
-            // SCHEDULE TIMES
+            // SCHEDULE TIMES WITH EXPLICIT 12-HOUR AM / PM CONTROLS
             Card(
                 shape = RoundedCornerShape(18.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceWhite),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("Alarm Scheduled Times", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = TextPrimaryLight)
+                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("Dose Times (AM / PM)", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = MaterialTheme.colorScheme.onSurface)
+                        Text("Tap to edit or toggle AM/PM", fontSize = 11.sp, color = TextSecondaryLight)
+                    }
 
+                    // Quick Preset Chips for 1-tap addition
+                    Text("Quick Presets:", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = TextSecondaryLight)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        QuickTimePresetChip("🌅 Morning (8:00 AM)") {
+                            if (!times.contains("08:00")) times = (times + "08:00").sorted()
+                        }
+                        QuickTimePresetChip("☀️ Noon (12:00 PM)") {
+                            if (!times.contains("12:00")) times = (times + "12:00").sorted()
+                        }
+                        QuickTimePresetChip("🌆 Evening (6:00 PM)") {
+                            if (!times.contains("18:00")) times = (times + "18:00").sorted()
+                        }
+                        QuickTimePresetChip("🌙 Bedtime (10:00 PM)") {
+                            if (!times.contains("22:00")) times = (times + "22:00").sorted()
+                        }
+                    }
+
+                    // Configured Time List
                     times.forEachIndexed { index, timeStr ->
+                        val (hour, minute) = TimeFormatHelper.parseHourMinute(timeStr)
+                        val isPm = hour >= 12
+                        val displayTime = TimeFormatHelper.formatDisplayTime(timeStr, themeState.use24HourFormat)
+
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(12.dp))
-                                .background(Color(0xFFF8FAFC))
+                                .background(MaterialTheme.colorScheme.background)
                                 .padding(horizontal = 12.dp, vertical = 8.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = timeStr,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = MedicalTeal,
-                                modifier = Modifier.clickable {
-                                    val parts = timeStr.split(":")
-                                    val h = parts.getOrNull(0)?.toIntOrNull() ?: 8
-                                    val m = parts.getOrNull(1)?.toIntOrNull() ?: 0
-                                    TimePickerDialog(context, { _, hour, minute ->
-                                        val formatted = String.format("%02d:%02d", hour, minute)
-                                        times = times.toMutableList().also { it[index] = formatted }
-                                    }, h, m, true).show()
-                                }
-                            )
+                            // Clickable Display Time (Opens 12-hour AM/PM TimePickerDialog)
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .clickable {
+                                        TimePickerDialog(
+                                            context,
+                                            { _, pickedHour, pickedMinute ->
+                                                val formatted = TimeFormatHelper.to24HourString(pickedHour, pickedMinute)
+                                                times = times.toMutableList().also { it[index] = formatted }
+                                            },
+                                            hour,
+                                            minute,
+                                            false // FALSE = 12-Hour view with AM / PM selector!
+                                        ).show()
+                                    }
+                            ) {
+                                Icon(Icons.Default.Schedule, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = displayTime,
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
 
-                            if (times.size > 1) {
-                                IconButton(onClick = { times = times.toMutableList().also { it.removeAt(index) } }) {
-                                    Icon(Icons.Default.Close, contentDescription = "Remove", tint = TextMutedLight)
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                // 1-Tap AM / PM Quick Toggle Button
+                                Surface(
+                                    shape = RoundedCornerShape(8.dp),
+                                    color = if (isPm) MaterialTheme.colorScheme.primary else Color(0xFFE2E8F0),
+                                    modifier = Modifier.clickable {
+                                        times = times.toMutableList().also {
+                                            it[index] = TimeFormatHelper.toggleAmPm(timeStr)
+                                        }
+                                    }
+                                ) {
+                                    Text(
+                                        text = if (isPm) "PM" else "AM",
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 12.sp,
+                                        color = if (isPm) Color.White else TextPrimaryLight,
+                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                                    )
+                                }
+
+                                if (times.size > 1) {
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    IconButton(
+                                        onClick = { times = times.toMutableList().also { it.removeAt(index) } },
+                                        modifier = Modifier.size(32.dp)
+                                    ) {
+                                        Icon(Icons.Default.Close, contentDescription = "Remove", tint = TextMutedLight)
+                                    }
                                 }
                             }
                         }
                     }
 
-                    TextButton(onClick = {
-                        TimePickerDialog(context, { _, hour, minute ->
-                            val formatted = String.format("%02d:%02d", hour, minute)
-                            if (!times.contains(formatted)) times = (times + formatted).sorted()
-                        }, 12, 0, true).show()
-                    }) {
-                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Add Another Dose Time", color = MedicalTeal, fontWeight = FontWeight.Bold)
+                    // Add Custom Dose Time Button
+                    OutlinedButton(
+                        onClick = {
+                            TimePickerDialog(
+                                context,
+                                { _, pickedHour, pickedMinute ->
+                                    val formatted = TimeFormatHelper.to24HourString(pickedHour, pickedMinute)
+                                    if (!times.contains(formatted)) times = (times + formatted).sorted()
+                                },
+                                12,
+                                0,
+                                false // FALSE = 12-Hour view with explicit AM / PM!
+                            ).show()
+                        },
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("Add Custom Time (Pick AM/PM)", fontWeight = FontWeight.Bold)
                     }
                 }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
         }
+    }
+}
+
+@Composable
+fun QuickTimePresetChip(
+    label: String,
+    onClick: () -> Unit
+) {
+    Surface(
+        shape = RoundedCornerShape(10.dp),
+        color = MaterialTheme.colorScheme.primaryContainer,
+        modifier = Modifier.clickable { onClick() }
+    ) {
+        Text(
+            text = label,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+        )
     }
 }

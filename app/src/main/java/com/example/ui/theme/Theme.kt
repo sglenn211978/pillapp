@@ -7,38 +7,46 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-private val LightColorScheme = lightColorScheme(
-    primary = MedicalTeal,
-    onPrimary = Color.White,
-    primaryContainer = CyanContainer,
-    onPrimaryContainer = MedicalTealDark,
-    secondary = BrightCyan,
-    background = SoftMistSlate,
-    surface = SurfaceWhite,
-    outline = OutlineBorder,
-    onBackground = TextPrimaryLight,
-    onSurface = TextPrimaryLight
-)
-
-private val DarkColorScheme = darkColorScheme(
-    primary = BrightCyan,
-    onPrimary = MedicalTealDark,
-    primaryContainer = MedicalTealDark,
-    onPrimaryContainer = Color.White,
-    secondary = BrightCyan,
-    background = DarkSlateBg,
-    surface = Color(0xFF1E293B),
-    outline = Color(0xFF334155),
-    onBackground = Color(0xFFF8FAFC),
-    onSurface = Color(0xFFF8FAFC)
-)
-
 @Composable
 fun PillPulseTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    themeState: AppThemeState = AppThemeState(),
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+    val isDark = when (themeState.mode) {
+        ThemeMode.LIGHT -> false
+        ThemeMode.DARK -> true
+        ThemeMode.SYSTEM -> isSystemInDarkTheme()
+    }
+
+    val primary = themeState.preset.primaryColor
+
+    val colorScheme = if (isDark) {
+        darkColorScheme(
+            primary = primary,
+            onPrimary = Color.White,
+            primaryContainer = primary.copy(alpha = 0.3f),
+            onPrimaryContainer = Color.White,
+            secondary = BrightCyan,
+            background = DarkSlateBg,
+            surface = Color(0xFF1E293B),
+            outline = Color(0xFF334155),
+            onBackground = Color(0xFFF8FAFC),
+            onSurface = Color(0xFFF8FAFC)
+        )
+    } else {
+        lightColorScheme(
+            primary = primary,
+            onPrimary = Color.White,
+            primaryContainer = primary.copy(alpha = 0.15f),
+            onPrimaryContainer = primary,
+            secondary = BrightCyan,
+            background = SoftMistSlate,
+            surface = SurfaceWhite,
+            outline = OutlineBorder,
+            onBackground = TextPrimaryLight,
+            onSurface = TextPrimaryLight
+        )
+    }
 
     MaterialTheme(
         colorScheme = colorScheme,

@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
@@ -26,8 +25,8 @@ import com.example.ui.dashboard.DashboardScreen
 import com.example.ui.database.MedicationDatabaseScreen
 import com.example.ui.edit.AddEditMedicationScreen
 import com.example.ui.history.HistoryScreen
-import com.example.ui.theme.MedicalTeal
 import com.example.ui.theme.PillPulseTheme
+import com.example.ui.theme.ThemeManager
 import com.example.ui.viewmodel.DashboardViewModel
 import com.example.ui.viewmodel.DashboardViewModelFactory
 
@@ -55,7 +54,9 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            PillPulseTheme {
+            val themeState by ThemeManager.themeState.collectAsState()
+
+            PillPulseTheme(themeState = themeState) {
                 val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
@@ -65,7 +66,7 @@ class MainActivity : ComponentActivity() {
                         // Only show bottom navigation on top-level tabs
                         if (currentRoute in listOf("dashboard", "database", "history")) {
                             NavigationBar(
-                                containerColor = Color.White
+                                containerColor = MaterialTheme.colorScheme.surface
                             ) {
                                 NavigationBarItem(
                                     selected = currentRoute == "dashboard",
@@ -78,7 +79,10 @@ class MainActivity : ComponentActivity() {
                                     },
                                     icon = { Icon(Icons.Default.CalendarToday, contentDescription = null) },
                                     label = { Text("Today") },
-                                    colors = NavigationBarItemDefaults.colors(selectedIconColor = MedicalTeal, indicatorColor = Color(0xFFCCFBF1))
+                                    colors = NavigationBarItemDefaults.colors(
+                                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                                        indicatorColor = MaterialTheme.colorScheme.primaryContainer
+                                    )
                                 )
 
                                 NavigationBarItem(
@@ -92,7 +96,10 @@ class MainActivity : ComponentActivity() {
                                     },
                                     icon = { Icon(Icons.Default.MenuBook, contentDescription = null) },
                                     label = { Text("Drug Guide") },
-                                    colors = NavigationBarItemDefaults.colors(selectedIconColor = MedicalTeal, indicatorColor = Color(0xFFCCFBF1))
+                                    colors = NavigationBarItemDefaults.colors(
+                                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                                        indicatorColor = MaterialTheme.colorScheme.primaryContainer
+                                    )
                                 )
 
                                 NavigationBarItem(
@@ -106,7 +113,10 @@ class MainActivity : ComponentActivity() {
                                     },
                                     icon = { Icon(Icons.Default.History, contentDescription = null) },
                                     label = { Text("History") },
-                                    colors = NavigationBarItemDefaults.colors(selectedIconColor = MedicalTeal, indicatorColor = Color(0xFFCCFBF1))
+                                    colors = NavigationBarItemDefaults.colors(
+                                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                                        indicatorColor = MaterialTheme.colorScheme.primaryContainer
+                                    )
                                 )
                             }
                         }

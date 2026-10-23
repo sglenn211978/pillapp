@@ -4,6 +4,7 @@ import android.app.Application
 import com.example.alarm.AlarmNotificationHelper
 import com.example.data.AppDatabase
 import com.example.data.MedicationRepository
+import com.example.ui.theme.ThemeManager
 
 class PillApplication : Application() {
 
@@ -19,6 +20,10 @@ class PillApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+
+        // Initialize Theme & User Appearance preferences
+        ThemeManager.init(this)
+
         // Initialize dedicated high-priority alarm channels
         AlarmNotificationHelper.createChannels(this)
     }

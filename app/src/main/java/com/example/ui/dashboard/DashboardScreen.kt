@@ -28,6 +28,7 @@ import com.example.data.ScheduleItem
 import com.example.ui.components.ComplianceRing
 import com.example.ui.theme.*
 import com.example.ui.viewmodel.DashboardViewModel
+import com.example.util.TimeFormatHelper
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -43,6 +44,9 @@ fun DashboardScreen(
     val schedule by viewModel.dailySchedule.collectAsState()
     val complianceStats by viewModel.complianceStats.collectAsState()
     val activeAlarm by viewModel.activeAlarm.collectAsState()
+    val themeState by ThemeManager.themeState.collectAsState()
+
+    var showThemeDialog by remember { mutableStateOf(false) }
 
     val isToday = selectedDate == LocalDate.now()
 
@@ -55,7 +59,7 @@ fun DashboardScreen(
                             modifier = Modifier
                                 .size(34.dp)
                                 .clip(RoundedCornerShape(10.dp))
-                                .background(MedicalTeal),
+                                .background(MaterialTheme.colorScheme.primary),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
@@ -71,7 +75,7 @@ fun DashboardScreen(
                                 text = "PillPulse",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp,
-                                color = TextPrimaryLight
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
                                 text = "Lock-Screen Medication Protocol",
@@ -82,6 +86,15 @@ fun DashboardScreen(
                     }
                 },
                 actions = {
+                    // Theme / Settings Dialog Icon
+                    IconButton(onClick = { showThemeDialog = true }) {
+                        Icon(
+                            imageVector = Icons.Default.Palette,
+                            contentDescription = "Theme & Appearance",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+
                     // Test Alarm (5s) button
                     FilledTonalButton(
                         onClick = {
@@ -89,21 +102,21 @@ fun DashboardScreen(
                             Toast.makeText(context, "Alarm firing in 5 seconds! Lock your screen to test.", Toast.LENGTH_LONG).show()
                         },
                         colors = ButtonDefaults.filledTonalButtonColors(
-                            containerColor = CyanContainer,
-                            contentColor = MedicalTealDark
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                         ),
                         shape = RoundedCornerShape(12.dp),
-                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp)
                     ) {
                         Icon(Icons.Default.Alarm, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text("Test Alarm (5s)", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Test (5s)", fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = SoftMistSlate)
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background)
             )
         },
-        containerColor = SoftMistSlate
+        containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         LazyColumn(
             modifier = modifier
@@ -170,14 +183,14 @@ fun DashboardScreen(
                         modifier = Modifier
                             .size(36.dp)
                             .clip(CircleShape)
-                            .background(Color.White)
+                            .background(MaterialTheme.colorScheme.surface)
                     ) {
                         Icon(Icons.Default.ChevronLeft, contentDescription = "Previous Day")
                     }
 
                     Surface(
                         shape = RoundedCornerShape(18.dp),
-                        color = if (isToday) CyanContainer else Color.White,
+                        color = if (isToday) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
                         modifier = Modifier.clickable { viewModel.setSelectedDate(LocalDate.now()) }
                     ) {
                         Text(
@@ -185,7 +198,7 @@ fun DashboardScreen(
                             else selectedDate.format(DateTimeFormatter.ofPattern("EEEE, MMM d")),
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp,
-                            color = if (isToday) MedicalTealDark else TextPrimaryLight,
+                            color = if (isToday) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                         )
                     }
@@ -195,7 +208,7 @@ fun DashboardScreen(
                         modifier = Modifier
                             .size(36.dp)
                             .clip(CircleShape)
-                            .background(Color.White)
+                            .background(MaterialTheme.colorScheme.surface)
                     ) {
                         Icon(Icons.Default.ChevronRight, contentDescription = "Next Day")
                     }
@@ -218,13 +231,13 @@ fun DashboardScreen(
                         text = "Scheduled Doses (${schedule.size})",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = TextPrimaryLight
+                        color = MaterialTheme.colorScheme.onSurface
                     )
 
                     TextButton(onClick = { onNavigateToAddEdit(-1L) }) {
-                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp), tint = MedicalTeal)
+                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.primary)
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("Add Med", color = MedicalTeal, fontWeight = FontWeight.Bold)
+                        Text("Add Med", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -234,7 +247,7 @@ fun DashboardScreen(
                 item {
                     Card(
                         shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = SurfaceWhite),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Column(
@@ -251,6 +264,7 @@ fun DashboardScreen(
                 items(schedule, key = { "${it.medication.id}_${it.scheduledDate}_${it.scheduledTime}" }) { item ->
                     ScheduleDoseCard(
                         item = item,
+                        use24Hour = themeState.use24HourFormat,
                         onToggleTaken = { viewModel.toggleTaken(item) },
                         onEdit = { onNavigateToAddEdit(item.medication.id) }
                     )
@@ -262,11 +276,23 @@ fun DashboardScreen(
             }
         }
     }
+
+    // THEME CUSTOMIZATION MODAL
+    if (showThemeDialog) {
+        ThemeSelectionDialog(
+            themeState = themeState,
+            onDismiss = { showThemeDialog = false },
+            onThemeModeChanged = { ThemeManager.setThemeMode(it) },
+            onColorPresetChanged = { ThemeManager.setColorPreset(it) },
+            onTimeFormatChanged = { ThemeManager.set24HourFormat(it) }
+        )
+    }
 }
 
 @Composable
 fun ScheduleDoseCard(
     item: ScheduleItem,
+    use24Hour: Boolean,
     onToggleTaken: () -> Unit,
     onEdit: () -> Unit,
     modifier: Modifier = Modifier
@@ -275,8 +301,11 @@ fun ScheduleDoseCard(
     val isSkipped = item.status == DoseStatus.SKIPPED
     val pillColor = Color(item.medication.colorHex)
 
-    val cardBg = if (isTaken) Color(0xFFF1F5F9) else SurfaceWhite
+    val cardBg = if (isTaken) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.surface
     val isLowStock = item.medication.remainingPills <= item.medication.lowStockThreshold
+
+    // Friendly 12-Hour AM/PM format
+    val displayTime = TimeFormatHelper.formatDisplayTime(item.scheduledTime, use24Hour)
 
     Card(
         shape = RoundedCornerShape(16.dp),
@@ -309,10 +338,10 @@ fun ScheduleDoseCard(
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = item.scheduledTime,
+                        text = displayTime,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
-                        color = if (item.isDueNow) StatusUrgent else TextPrimaryLight
+                        color = if (item.isDueNow) StatusUrgent else MaterialTheme.colorScheme.onSurface
                     )
 
                     if (item.isDueNow) {
@@ -354,7 +383,7 @@ fun ScheduleDoseCard(
                     text = item.medication.name,
                     fontSize = 17.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (isTaken) TextMutedLight else TextPrimaryLight,
+                    color = if (isTaken) TextMutedLight else MaterialTheme.colorScheme.onSurface,
                     textDecoration = if (isTaken) TextDecoration.LineThrough else TextDecoration.None
                 )
 

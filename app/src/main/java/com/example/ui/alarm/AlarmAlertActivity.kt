@@ -170,7 +170,7 @@ fun AlarmAlertScreen(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "SCHEDULED ALARM • $scheduledTime",
+                    text = "SCHEDULED ALARM • ${com.example.util.TimeFormatHelper.formatDisplayTime(scheduledTime)}",
                     color = Color.White,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
