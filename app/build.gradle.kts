@@ -6,15 +6,15 @@ plugins {
 }
 
 android {
-    namespace = "com.pillease.app"
+    namespace = "com.example"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.pillease.app"
+        applicationId = "com.aistudio.pillpulse.mderst"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 16
+        versionName = "16.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -31,7 +31,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-        isCoreLibraryDesugaringEnabled = false
     }
     kotlinOptions {
         jvmTarget = "17"

@@ -1,9 +1,10 @@
 <resources>
-    <string name="app_name">PillEase</string>
-    <string name="channel_medication_name">Medication Reminders</string>
-    <string name="channel_medication_desc">Timely notifications when it is time to take your pills</string>
-    <string name="action_take">Taken</string>
-    <string name="action_snooze">Snooze 15m</string>
-    <string name="action_skip">Skip</string>
-    <string name="action_take_all">Take All</string>
+    <string name="app_name">PillPulse</string>
+    <string name="channel_medication_name">Medication Alarms</string>
+    <string name="channel_medication_desc">Critical full-screen alerts and alarms when medications are due</string>
+    <string name="action_take">Slide to Confirm Taken</string>
+    <string name="action_snooze_10">Snooze 10m</string>
+    <string name="action_snooze_15">Snooze 15m</string>
+    <string name="action_skip">Skip with Reason</string>
+    <string name="action_silence">Silence Alarm</string>
 </resources>
