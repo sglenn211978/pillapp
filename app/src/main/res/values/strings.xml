@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">PillEase</string>
+    <string name="channel_medication_name">Medication Reminders</string>
+    <string name="channel_medication_desc">Timely notifications when it is time to take your pills</string>
+    <string name="action_take">Taken</string>
+    <string name="action_snooze">Snooze 15m</string>
+    <string name="action_skip">Skip</string>
+    <string name="action_take_all">Take All</string>
+</resources>
